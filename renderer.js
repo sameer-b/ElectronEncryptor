@@ -1,11 +1,12 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-var app = require('electron').remote;
-var dialog = app.dialog;
-var fs = require('fs');
-var exec = require('child_process').exec;
-var path = require('path');
+let app = require('electron').remote,
+    dialog = app.dialog,
+    fs = require('fs'),
+    exec = require('child_process').exec,
+    path = require('path');
+
 const params = {};
 
 /**
@@ -40,30 +41,13 @@ document.getElementById('encrypt').addEventListener('click', () => {
  * @type {[type]}
  */
 document.getElementById('fetch-policy-from-image').addEventListener('click', () => {
-    var usePolicyFromImage = !document.getElementById('fetch-policy-from-image').checked,
-        policyTextArea = document.getElementById('policy-text-area');
-    console.log(usePolicyFromImage);
-    if (!usePolicyFromImage) {
+    let policyTextArea = document.getElementById('policy-text-area');
+
+    if (!usePolicyFromImage()) {
         policyTextArea.style.display = 'block';
     } else {
         policyTextArea.style.display = 'none';
     }
-}, false);
-
-/**
- * Target file picker
- * @type {[type]}
- */
-
-document.getElementById('select-output-file').addEventListener('click', () => {
-    dialog.showOpenDialog({properties: ['openDirectory']}, function (fileName) {
-        if (!fileName){
-            console.log("You didn't save the file");
-            return;
-        }
-        document.getElementById('output-file').value = fileName[0];
-        params['output-file'] = fileName[0];
-    });
 }, false);
 
 /**
@@ -72,13 +56,37 @@ document.getElementById('select-output-file').addEventListener('click', () => {
  * @param  {String} filename [Input file to be decrypted]
  * @return {String} [Command to execute bridge]
  */
-var getCmd = function() {
-    return 'java -jar ' + __dirname + path.sep + 'lib' + path.sep + 'ABE_Encryptor.jar' + ' ' + params['ca-pub'] + ' ' + getPolicy() + ' ' + params['input-file'] + ' ' + params['output-file'];
+let getCmd = () => {
+    return 'java -jar ' + __dirname + path.sep + 'lib' + path.sep + 'ABE_Encryptor.jar' + ' ' + params['ca-pub'] + ' ' + getPolicy() + ' ' + params['input-file'] + ' ' + getOutputFile();
 };
 
-var executeBridge = function() {
-    var cmd = getCmd();
+let getPolicy = () => {
+    let policy = null;
+    if (!usePolicyFromImage()) {
+        policy = document.getElementById('policy-text-area').value;
+    } else {
 
+    }
+    console.log(policy);
+    return policy;
+}
+
+let getOutputFile = () => {
+    let input = params['input-file'].split(path.sep),
+        outputFile = 'enc_' + input[input.length -1],
+        outputPath = '';
+        for(let i = 0; i < input.length -1 ; i++) {
+            outputPath += input[i] + path.sep;
+        }
+        console.log(outputPath + outputFile);
+        return outputPath + outputFile;
+}
+
+let usePolicyFromImage = () => !document.getElementById('fetch-policy-from-image').checked;
+
+let executeBridge = () => {
+    let cmd = getCmd();
+    console.log(cmd);
     exec(cmd, {}, function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
