@@ -57,7 +57,7 @@ document.getElementById('fetch-policy-from-image').addEventListener('click', () 
  * @return {String} [Command to execute bridge]
  */
 let getCmd = () => {
-    return 'java -jar ' + __dirname + path.sep + 'lib' + path.sep + 'ABE_Encryptor.jar' + ' ' + params['ca-pub'] + ' ' + getPolicy() + ' ' + params['input-file'] + ' ' + getOutputFile();
+    return 'java -jar ' + __dirname + path.sep + 'lib' + path.sep + 'ABE_Encryptor.jar' + ' ' + params['ca-pub'] + ' \"' + getPolicy() + '\" ' + params['input-file'] + ' ' + getOutputFile();
 };
 
 let getPolicy = () => {
@@ -67,10 +67,10 @@ let getPolicy = () => {
     } else {
         let md = fs.readFileSync(params['input-file']);
         var parser = require('exif-parser').create(md);
+        parser.enableBinaryFields(true);
         var result = parser.parse();
-        console.log(result);
+        policy = result.tags['Copyright'];
     }
-    console.log(policy);
     return policy;
 }
 
@@ -89,7 +89,6 @@ let usePolicyFromImage = () => !document.getElementById('fetch-policy-from-image
 
 let executeBridge = () => {
     let cmd = getCmd();
-    console.log(cmd);
     exec(cmd, {}, function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);

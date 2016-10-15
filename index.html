@@ -2,18 +2,20 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>PCD Encryptor</title
+        <title>PCD Encryptor</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css" />
+        <link rel="stylesheet" href="styles/style.css" />
     </head>
     <body>
-        <div class="">
-            <button class="btn" type="button" id="select-input-file">Input File</button>
-            <input type="text" placeholder="Select input file" id="input-file" disabled="disabled"/>
+        <div class="container">
+            <button class="btn btn-small" type="button" id="select-input-file">Input File</button>
+            <input type="text" placeholder="Select input file" id="input-file" disabled="disabled" class="ip"/>
         </div>
-        <div class="">
-            <button class="btn" type="button" id="ca-pub">CA Public Key</button>
-            <input type="text" placeholder="Please select a file" id="ca-pub-file" disabled="disabled"/>
+        <div class="container">
+            <button class="btn btn-small" type="button" id="ca-pub">CA Public Key</button>
+            <input type="text" placeholder="Please select a file" id="ca-pub-file" disabled="disabled" class="ip"/>
         </div>
-        <div class="">
+        <div class="container">
             <div class="switch">
                 <label>
                     Pull Policy from Image metadata
@@ -24,12 +26,10 @@
             </div>
             <textarea placeholder="Specify Policy" id="policy-text-area" class="materialize-textarea"></textarea>
         </div>
-        <div class="">
-            <button class="waves-effect waves-light btn" id="encrypt">Encrypt</button>
+        <div class="row">
+            <button class="waves-effect waves-light btn btn-full" id="encrypt">Encrypt</button>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
-        <link rel="stylesheet" href="styles/style.css" />
     </body>
 
     <script>
