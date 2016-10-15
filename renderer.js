@@ -35,7 +35,10 @@ document.getElementById('encrypt').addEventListener('click', () => {
     console.log(executeBridge());
 }, false);
 
-
+/**
+ * Show policy text area
+ * @type {[type]}
+ */
 document.getElementById('fetch-policy-from-image').addEventListener('click', () => {
     var usePolicyFromImage = !document.getElementById('fetch-policy-from-image').checked,
         policyTextArea = document.getElementById('policy-text-area');
@@ -48,13 +51,29 @@ document.getElementById('fetch-policy-from-image').addEventListener('click', () 
 }, false);
 
 /**
+ * Target file picker
+ * @type {[type]}
+ */
+
+document.getElementById('select-output-file').addEventListener('click', () => {
+    dialog.showOpenDialog({properties: ['openDirectory']}, function (fileName) {
+        if (!fileName){
+            console.log("You didn't save the file");
+            return;
+        }
+        document.getElementById('output-file').value = fileName[0];
+        params['output-file'] = fileName[0];
+    });
+}, false);
+
+/**
  * Builds command to execute PCDBridge
  * @param  {String} email [Email address of currently authenticated user]
  * @param  {String} filename [Input file to be decrypted]
  * @return {String} [Command to execute bridge]
  */
 var getCmd = function() {
-    return 'java -jar ' + __dirname + path.sep + 'lib' + path.sep + 'PCDBridge.jar';
+    return 'java -jar ' + __dirname + path.sep + 'lib' + path.sep + 'ABE_Encryptor.jar' + ' ' + params['ca-pub'] + ' ' + getPolicy() + ' ' + params['input-file'] + ' ' + params['output-file'];
 };
 
 var executeBridge = function() {
@@ -69,17 +88,6 @@ var executeBridge = function() {
         }
 
         if(stdout) {
-            console.log(__dirname);
         }
-    });
-}
-
-function readFile(filepath) {
-    fs.readFile(filepath, 'utf-8', (err, data) => {
-        if(err){
-            alert("An error ocurred reading the file :" + err.message);
-            return;
-        }
-        console.log(data);
     });
 }
