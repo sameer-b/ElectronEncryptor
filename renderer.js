@@ -65,7 +65,10 @@ let getPolicy = () => {
     if (!usePolicyFromImage()) {
         policy = document.getElementById('policy-text-area').value;
     } else {
-
+        let md = fs.readFileSync(params['input-file']);
+        var parser = require('exif-parser').create(md);
+        var result = parser.parse();
+        console.log(result);
     }
     console.log(policy);
     return policy;
